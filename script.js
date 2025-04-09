@@ -3,11 +3,29 @@ const displayedText = document.getElementById('displayed-text');
 const userInput = document.getElementById('user-input');
 const timeDisplay = document.getElementById('time');
 const errorsDisplay = document.getElementById('errors');
+const bookSelector = document.getElementById('book-selector');
 
 // these are the itital values being set at zero
 let startTime;
 let errors = 0;
-let text = "This is some sample text. Type it as fast as you can!"; // Replace with your text
+let text = ""; // Initialize text variable
+
+const bookTexts = {
+    sample: "This is some sample text. Type it as fast as you can!",
+    book1: "This is the text for book 1. You can put any text here.",
+    book2: "And here is the text for book number 2. Add your own books!",
+};
+
+function loadText(bookKey) {
+    text = bookTexts[bookKey] || "";
+    displayHighlightedText("");
+    userInput.value = "";
+    userInput.disabled = false;
+    startTime = null;
+    errors = 0;
+    errorsDisplay.textContent = errors;
+    timeDisplay.textContent = "0";
+}
 
 function displayHighlightedText(inputText) {
     let highlighted = '';
@@ -21,17 +39,18 @@ function displayHighlightedText(inputText) {
     displayedText.innerHTML = highlighted;
 }
 
-//allows text to appear on the page
-displayedText.textContent = text;
+bookSelector.addEventListener('change', (event) => {
+    loadText(event.target.value);
+});
 
-//exectues everytime the input occers because of the () => {
 userInput.addEventListener('input', () => {
     if (!startTime) {
         startTime = new Date();
     }
-//checks if the type is true
+
     const inputText = userInput.value;
-    let correct = true;
+    let currentErrors = 0;
+    
 //checks if the thing typed matches the spot in the text, if not it notes it
      for (let i = 0; i < inputText.length; i++) {
         if (inputText[i] !== text[i]) {
@@ -43,12 +62,12 @@ userInput.addEventListener('input', () => {
     errorsDisplay.textContent = errors;
     displayHighlightedText(inputText);
 
-    if (inputText === text) {
+   if (inputText === text) {
         const endTime = new Date();
         const timeTaken = (endTime - startTime) / 1000;
         timeDisplay.textContent = timeTaken.toFixed(2);
         userInput.disabled = true;
     }
 });
-//Initial Display
-displayHighlightedText("");
+
+loadText(bookSelector.value); // Load initial text
