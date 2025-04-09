@@ -40,3 +40,8 @@ body {
   justify-content: space-around;
   margin-top: 10px;
 }
+
+.error {
+    color: red;
+    background-color: yellow;
+}
