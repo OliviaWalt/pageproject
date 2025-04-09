@@ -9,6 +9,18 @@ let startTime;
 let errors = 0;
 let text = "This is some sample text. Type it as fast as you can!"; // Replace with your text
 
+function displayHighlightedText(inputText) {
+    let highlighted = '';
+    for (let i = 0; i < text.length; i++) {
+        if (i < inputText.length && inputText[i] !== text[i]) {
+            highlighted += `<span class="error">${text[i]}</span>`;
+        } else {
+            highlighted += text[i];
+        }
+    }
+    displayedText.innerHTML = highlighted;
+}
+
 //allows text to appear on the page
 displayedText.textContent = text;
 
@@ -21,15 +33,16 @@ userInput.addEventListener('input', () => {
     const inputText = userInput.value;
     let correct = true;
 //checks if the thing typed matches the spot in the text, if not it notes it
-    for (let i = 0; i < inputText.length; i++) {
+     for (let i = 0; i < inputText.length; i++) {
         if (inputText[i] !== text[i]) {
-            correct = false;
-            errors++;
+            currentErrors++;
         }
     }
+    errors = currentErrors;
 
     errorsDisplay.textContent = errors;
-//how it checks when the typeing is done
+    displayHighlightedText(inputText);
+
     if (inputText === text) {
         const endTime = new Date();
         const timeTaken = (endTime - startTime) / 1000;
@@ -37,3 +50,5 @@ userInput.addEventListener('input', () => {
         userInput.disabled = true;
     }
 });
+//Initial Display
+displayHighlightedText("");
